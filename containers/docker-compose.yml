@@ -1,0 +1,20 @@
+# Services running on the dev VM. Each service maps to one container,
+# typically one per OMSCS course. Add a new course = add a new service block
+# below, then re-run ./deploy.sh.
+#
+# This file is the source of truth for host SSH ports — adding a service
+# here also opens its port in the NSG.
+#
+# /var/lib/dev-vm/authorized_keys is a symlink that the CSE bootstrap creates
+# on the VM, pointing at the admin user's authorized_keys. Using a fixed
+# path here means the bind-mount target stays admin-user-agnostic.
+
+services:
+  gios-env:
+    build: ./gios-env
+    container_name: gios-env
+    ports:
+      - "2222:22"
+    restart: unless-stopped
+    volumes:
+      - /var/lib/dev-vm/authorized_keys:/etc/ssh/authorized_keys:ro
