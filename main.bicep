@@ -21,6 +21,9 @@ param location string
 @description('VM size, e.g. Standard_B2s.')
 param vmSize string
 
+@description('DNS label prepended to <region>.cloudapp.azure.com to form the FQDN.')
+param dnsLabel string
+
 @description('SSH public key content. Pass the contents of ~/.ssh/id_ed25519.pub.')
 @secure()
 param sshPublicKey string
@@ -61,7 +64,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
     publicIPAllocationMethod: 'Static'
     publicIPAddressVersion: 'IPv4'
     dnsSettings: {
-      domainNameLabel: toLower(vmName)
+      domainNameLabel: toLower(dnsLabel)
     }
   }
 }
