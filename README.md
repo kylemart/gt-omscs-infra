@@ -42,8 +42,9 @@ cd gt-omscs-infra
 
 ## Configure
 
-Copy `.env.example` to `.env` and set `DNS_LABEL` (required). Uncomment
-any other values you want to change; descriptions are in the file.
+Copy [`.env.example`](.env.example) to `.env` and set `DNS_LABEL`
+(required). Uncomment any other values you want to change; descriptions
+are in the file.
 
 ```bash
 cp .env.example .env
