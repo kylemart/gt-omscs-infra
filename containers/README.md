@@ -11,8 +11,8 @@ Create `<service>/` with a `Dockerfile` for the course environment.
 
 Add a matching service block to `docker-compose.yml`, picking an unused
 host port for the `<port>:22` mapping. Tag the service with a Compose
-profile (`profiles: [<course>]`) and add `<course>` to the default
-`COMPOSE_PROFILES` value in `.env.example`.
+profile (`profiles: [<course>]`); `deploy.sh` discovers profiles from
+the compose file, so the new course is enabled by default.
 
 Run `./deploy.sh` from the repo root. The new port opens in the NSG and
 the container is built and started on the VM. Existing containers keep

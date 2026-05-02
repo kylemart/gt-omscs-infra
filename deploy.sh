@@ -29,7 +29,13 @@ AUTO_SHUTDOWN_ENABLED="${AUTO_SHUTDOWN_ENABLED:-true}"
 AUTO_SHUTDOWN_TIME="${AUTO_SHUTDOWN_TIME:-1900}"
 AUTO_SHUTDOWN_TIME_ZONE="${AUTO_SHUTDOWN_TIME_ZONE:-UTC}"
 AUTO_SHUTDOWN_EMAIL="${AUTO_SHUTDOWN_EMAIL:-}"
-COMPOSE_PROFILES="${COMPOSE_PROFILES:-gios,sat}"
+
+# Default to every profile tagged in the compose file, so adding a new
+# course doesn't require touching this script or .env.example.
+if [[ -z "${COMPOSE_PROFILES:-}" ]]; then
+    COMPOSE_PROFILES=$(yq -r '[.services[].profiles[]] | unique | join(",")' \
+        "$SCRIPT_DIR/containers/docker-compose.yml")
+fi
 
 ADMIN_USERNAME="omscs"
 
