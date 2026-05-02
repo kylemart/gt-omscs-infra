@@ -46,11 +46,10 @@ you'll connect with `ssh -p 2223 root@<vm-ip>`.
 You need:
 
 - An Azure subscription with permission to create resource groups and VMs.
-- Homebrew on macOS (https://brew.sh) — needed for the installs below.
-- The `az` CLI: `brew install azure-cli`.
-- `yq` for parsing `docker-compose.yml`: `brew install yq`.
-- An SSH keypair at `~/.ssh/id_ed25519` and `~/.ssh/id_ed25519.pub`. If you
-  don't have one: `ssh-keygen -t ed25519`.
+- Homebrew (https://brew.sh).
+- `az` CLI (`brew install azure-cli`).
+- `yq` (`brew install yq`).
+- An SSH keypair at `~/.ssh/id_ed25519` (run `ssh-keygen -t ed25519` if needed).
 
 That's it. Everything else (resource group, VM, container) gets created by
 the script.
