@@ -5,13 +5,6 @@ One Azure VM runs Docker, with a separate container for each OMSCS
 course. CLion connects over SSH to the container's exposed port.
 
 ```mermaid
----
-config:
-  flowchart:
-    subGraphTitleMargin:
-      top: 10
-      bottom: 10
----
 graph LR
     CLion["CLion (local Mac)"]
 
