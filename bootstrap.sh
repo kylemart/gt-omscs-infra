@@ -8,7 +8,8 @@
 
 set -euo pipefail
 
-: "${ADMIN_USERNAME:?ADMIN_USERNAME must be set}"
+# Azure provisions the admin user with UID 1000 on Ubuntu.
+ADMIN_USERNAME=$(id -un 1000)
 
 # `command -v` guard makes re-runs a no-op once Docker is installed.
 if ! command -v docker >/dev/null 2>&1; then

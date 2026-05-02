@@ -209,7 +209,7 @@ resource containersExtension 'Microsoft.Compute/virtualMachines/extensions@2024-
     typeHandlerVersion: '2.1'
     autoUpgradeMinorVersion: true
     protectedSettings: {
-      script: base64('ADMIN_USERNAME=${adminUsername}\n${loadTextContent('bootstrap.sh')}')
+      script: base64(loadTextContent('bootstrap.sh'))
     }
   }
 }
