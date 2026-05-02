@@ -18,9 +18,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [[ -f "$SCRIPT_DIR/.env" ]] && source "$SCRIPT_DIR/.env"
 
 # Defaults live here so the Bicep template stays values-free.
-RG="${RG:-rg-omscs}"
 LOCATION="${LOCATION:-eastus2}"
-VM_NAME="${VM_NAME:-vm-omscsx64-eastus}"
+RG="${RG:-rg-omscs-$LOCATION}"
+VM_NAME="${VM_NAME:-omscs-dev-vm-$LOCATION}"
 VM_SIZE="${VM_SIZE:-Standard_B2s}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519.pub}"
 SSH_SOURCE_ADDRESS_PREFIX="${SSH_SOURCE_ADDRESS_PREFIX:-*}"
@@ -44,7 +44,7 @@ az group create --name "$RG" --location "$LOCATION" -o none
 echo "==> Provisioning VM in $RG..."
 VM_HOST=$(az deployment group create \
     --resource-group "$RG" \
-    --name "gios-vm-$(date +%Y%m%d-%H%M%S)" \
+    --name "omscs-vm-$(date +%Y%m%d-%H%M%S)" \
     --template-file "$SCRIPT_DIR/main.bicep" \
     --parameters \
         vmName="$VM_NAME" \

@@ -17,10 +17,10 @@ flowchart LR
     end
 
     Student -->|ssh| Sshd
-    Student -->|"ssh — Docker NATs :2222 → :22"| Container
+    Student -->|"ssh — Docker NATs :2222 -> :22"| Container
 ```
 
-Resource group `rg-omscs`, region `eastus2`, VM size `Standard_B2s`. The host
+Resource group `rg-omscs-eastus2`, region `eastus2`, VM size `Standard_B2s`. The host
 runs Ubuntu 24.04 LTS; the container is built from
 `gtomscs6200/spr26-environment`.
 
@@ -37,7 +37,7 @@ So the same SSH key gets you into the host *and* the container — no
 separate key management.
 
 When you add a second container later (e.g. `aos-env` for Advanced Operating
-Systems), it'll get its own port mapping (2223 → its container's 22), and
+Systems), it'll get its own port mapping (2223 -> its container's 22), and
 you'll connect with `ssh -p 2223 root@<vm-ip>`.
 
 ## Before you start
@@ -45,8 +45,9 @@ you'll connect with `ssh -p 2223 root@<vm-ip>`.
 You need:
 
 - An Azure subscription with permission to create resource groups and VMs.
-- The `az` CLI on your laptop. On macOS: `brew install azure-cli`.
-- `yq` for parsing `docker-compose.yml`. On macOS: `brew install yq`.
+- Homebrew on macOS (https://brew.sh) — needed for the installs below.
+- The `az` CLI: `brew install azure-cli`.
+- `yq` for parsing `docker-compose.yml`: `brew install yq`.
 - An SSH keypair at `~/.ssh/id_ed25519` and `~/.ssh/id_ed25519.pub`. If you
   don't have one: `ssh-keygen -t ed25519`.
 
@@ -78,11 +79,11 @@ If you have multiple subscriptions, pick one:
 az account set --subscription "Your Subscription Name"
 ```
 
-## Step 2 — Clone and enter the infra directory
+## Step 2 — Clone and enter the repo
 
 ```bash
-git clone <this-repo> gt-gios
-cd gt-gios/infra
+git clone git@github.com:kylemart/gt-omscs-infra.git
+cd gt-omscs-infra
 ```
 
 Quick sanity check that you're in the right place:
@@ -98,14 +99,14 @@ ls
 ./deploy.sh
 ```
 
-The defaults deploy a fresh VM under resource group `rg-omscs` in
-`eastus2` with VM name `vm-omscsx64-eastus`. To use different values see
-[Reference → Overrides](#overrides) below.
+The defaults deploy a fresh VM under resource group `rg-omscs-eastus2` in
+`eastus2` with VM name `omscs-dev-vm-eastus2`. To use different values see
+[Reference > Overrides](#overrides) below.
 
 You'll see, in order:
 
 1. `Subscription:` line confirming what you're deploying into.
-2. `==> Provisioning VM in rg-omscs...` and a table of resources being
+2. `==> Provisioning VM in rg-omscs-eastus2...` and a table of resources being
    created. The deploy pauses for ~2-3 minutes while the Custom Script
    Extension installs Docker on the VM (first deploy only).
 3. `==> Syncing containers/ to <fqdn>...` — `rsync` ships the container
@@ -159,15 +160,15 @@ back. The local `cmake-build-*` directories on your laptop stay separate
 from the remote build artifacts under the container's `/tmp/`.
 
 The walkthrough below uses `pr4/` as the project. Substitute the path for
-other GIOS projects.
+your other course projects.
 
 ### 5.1 — Add a remote toolchain
 
-**CLion → Settings → Build, Execution, Deployment → Toolchains**
+**CLion > Settings > Build, Execution, Deployment > Toolchains**
 
 1. Click **+** and pick **Remote Host**.
 2. Name it something memorable, e.g. `gios-env (test VM)`.
-3. Next to **Credentials**, click the gear icon → **+** to create a new SSH
+3. Next to **Credentials**, click the gear icon > **+** to create a new SSH
    configuration:
    - **Host**: the VM's public IP from Step 3 (e.g. `20.62.97.41`)
    - **Port**: `2222`
@@ -189,7 +190,7 @@ other GIOS projects.
 
 ### 5.2 — Add a CMake profile that uses the toolchain
 
-**Settings → Build, Execution, Deployment → CMake**
+**Settings > Build, Execution, Deployment > CMake**
 
 1. Click **+** to add a new profile.
 2. **Name**: `Debug-remote` (or whatever you like).
@@ -209,8 +210,7 @@ mostly the proto-generated files). Subsequent syncs are incremental.
 
 ### 5.3 — Open the project and select the profile
 
-1. **File → Open** → pick the project root, e.g.
-   `~/Developer/kylemart/gt-gios/pr4`.
+1. **File > Open** and pick the project root.
 2. Trust the project when prompted.
 3. Wait for CLion to detect the CMake project and finish the first reload.
 4. In the top toolbar, the CMake profile dropdown should show
@@ -219,7 +219,7 @@ mostly the proto-generated files). Subsequent syncs are incremental.
 
 ### 5.4 — Build
 
-**Build → Build Project** (or `⌘F9` on macOS).
+**Build > Build Project** (or `⌘F9` on macOS).
 
 The build runs on the VM, not locally. Output binaries land in
 `pr4/bin/` on the remote side; CLion syncs them back automatically. First
@@ -235,10 +235,10 @@ it's most likely connected to the host (port 22) instead of the container
 The pr4 project produces four binaries:
 `dfs-server-p1`, `dfs-client-p1`, `dfs-server-p2`, `dfs-client-p2`.
 
-1. Top-toolbar **Run/Debug Configurations** dropdown → **Edit
+1. Top-toolbar **Run/Debug Configurations** dropdown > **Edit
    Configurations**.
 2. Each binary should already have an auto-generated configuration. If
-   not, click **+** → **CMake Application** and pick the target.
+   not, click **+** > **CMake Application** and pick the target.
 3. Set **Program arguments** as needed (e.g. `--mount /tmp/server-mount`
    for the server).
 4. **Working directory**: leave at the default (`$ProjectFileDir$`) — the
@@ -255,8 +255,8 @@ The public IP is allocated as `Static`, so it stays constant for as long
 as the VM exists. If you tear down and redeploy, you'll get a new IP. Two
 things to update:
 
-1. **CLion**: Settings → Build → Toolchains → your toolchain →
-   Credentials → edit Host. CLion picks up the change without rebuilding
+1. **CLion**: Settings > Build > Toolchains > your toolchain >
+   Credentials > edit Host. CLion picks up the change without rebuilding
    anything.
 2. **Local SSH known_hosts**: `ssh-keygen -R '[old-ip]:2222'` and
    `ssh-keygen -R old-ip` to drop stale fingerprints.
@@ -277,9 +277,10 @@ things to update:
 
 ### Overrides
 
-Defaults live in `deploy.sh`, and every Bicep param has a matching env var.
-(`adminUsername` is hardcoded to `omscs` in both `deploy.sh` and `main.bicep`,
-so it isn't configurable.) Two ways to override.
+Defaults live in `deploy.sh`, and most Bicep params have a matching env
+var. The exceptions are `containerSshPorts` (derived from `docker-compose.yml`)
+and `adminUsername` (hardcoded to `omscs`, not configurable). Two ways to
+override.
 
 **Persistent (recommended for things you set every run):** copy
 `.env.example` to `.env` and uncomment the values you want.
@@ -298,16 +299,14 @@ anything uncommented there wins.
 for keys NOT uncommented in `.env`.
 
 ```bash
-RG=rg-omscs-test \
-VM_NAME=vm-gios-test \
-./deploy.sh
+RG=rg-omscs-test-eastus2 ./deploy.sh
 ```
 
 | Env var | Default | Purpose |
 |---|---|---|
-| `RG` | `rg-omscs` | Resource group name. |
+| `RG` | `rg-omscs-$LOCATION` | Resource group name. |
 | `LOCATION` | `eastus2` | Azure region for the RG and resources. |
-| `VM_NAME` | `vm-omscsx64-eastus` | Used to derive NIC/NSG/IP/disk names. |
+| `VM_NAME` | `omscs-dev-vm-$LOCATION` | Used to derive NIC/NSG/IP/disk names. |
 | `VM_SIZE` | `Standard_B2s` | VM SKU. |
 | `SSH_KEY` | `~/.ssh/id_ed25519.pub` | Public key embedded in the VM's `authorized_keys`. |
 | `SSH_SOURCE_ADDRESS_PREFIX` | `*` | NSG inbound source. Lock to your IP for security. |
@@ -341,65 +340,46 @@ the redeploy path for anything you want to keep.
 For a new course (e.g. `aos-env` for Advanced Operating Systems on port
 2223):
 
-1. Create the directory and copy the Dockerfile as a starting point:
-   ```bash
-   mkdir -p containers/aos-env
-   cp containers/gios-env/Dockerfile containers/aos-env/
-   $EDITOR containers/aos-env/Dockerfile          # change FROM, add tools
-   ```
-2. Add the service to `containers/docker-compose.yml`:
-   ```yaml
-     aos-env:
-       build: ./aos-env
-       container_name: aos-env
-       ports:
-         - "2223:22"
-       restart: unless-stopped
-       volumes:
-         - /var/lib/dev-vm/authorized_keys:/etc/ssh/authorized_keys:ro
-   ```
-3. `./deploy.sh`. `yq` picks up the new `2223:22` mapping, the NSG opens
-   2223, `rsync` ships the new directory, and `docker compose up` brings
-   `aos-env` up alongside `gios-env`.
+1. Create a `containers/<service>/` directory with a `Dockerfile` for the
+   course's environment. The existing `gios-env/Dockerfile` is a
+   reasonable starting point to copy and adapt.
+2. Add a matching service block to `containers/docker-compose.yml`,
+   choosing an unused host port for its `:22` mapping.
+3. Run `./deploy.sh`. The new port opens in the NSG, the container is
+   built and started on the VM, and existing containers keep running.
 
 ### Removing a container
 
 1. Delete `containers/<service>/`.
 2. Remove the service block from `containers/docker-compose.yml`.
-3. `./deploy.sh`. `rsync --delete` removes the directory from the VM, the
-   NSG rule for the now-unused port disappears (it's no longer in compose),
-   and `docker compose up -d --remove-orphans` stops and removes the
-   container.
+3. Run `./deploy.sh`. The directory disappears from the VM, the NSG rule
+   for the unused port goes away, and the container is stopped and removed.
 
-The image stays in Docker's local cache after the container goes away.
-Run `docker image prune` (on the VM) to reclaim the disk.
+The image stays cached on the VM. Use `docker image prune` to reclaim disk.
 
 ### How rebuilds happen
 
-`deploy.sh` runs three phases:
+`deploy.sh` always runs three phases, but each one short-circuits when
+nothing has changed.
 
-1. **Provision.** `az deployment group create` against `main.bicep`. ARM
-   compares desired vs. current state — first deploy creates everything,
-   subsequent deploys are no-ops unless Bicep or `bootstrap.sh` changed.
-   The CSE only re-runs if its `protectedSettings.script` changed.
-2. **Sync.** `rsync -az --delete containers/` mirrors the local directory
-   onto the VM at `~/containers/`. Only changed files cross the wire.
-3. **Compose up.** `ssh ... docker compose up -d --build --remove-orphans`:
-   - Services whose source files are unchanged keep running.
-   - Services whose source changed get rebuilt and restarted.
-   - Services no longer in `docker-compose.yml` get stopped.
+**Provision.** ARM diffs the Bicep template against the current state of
+the resource group. First deploys create everything; subsequent deploys
+touch nothing unless `main.bicep` or `bootstrap.sh` changed.
 
-This is why iterative deploys feel cheap: a no-op deploy is a no-op, a
-single-service edit only churns that service, and adding a new service
-doesn't touch existing ones.
+**Sync.** `rsync` mirrors `containers/` onto the VM, sending only changed
+bytes.
+
+**Compose up.** Compose rebuilds only the services whose source changed,
+leaves untouched services running, and removes any service that no longer
+exists in `docker-compose.yml`.
 
 ### Tear down
 
 ```bash
-az group delete --name rg-omscs --yes --no-wait
+az group delete --name rg-omscs-eastus2 --yes --no-wait
 ```
 
-Wipes the whole resource group. If `rg-omscs` has other resources you want
+Wipes the whole resource group. If the RG has other resources you want
 to keep, delete the VM, NIC, public IP, NSG, vnet, and disk by name
 instead.
 
