@@ -1,37 +1,38 @@
 # CLion remote builds
 
-The container is the build target. CLion will SSH to it on port 2222 as
-`root`, sync the source over SFTP, run CMake there, and stream the output
-back. The local `cmake-build-*` directories on your laptop stay separate
-from the remote build artifacts under the container's `/tmp/`.
+The container is the build target. CLion SSHes in, syncs your source
+over SFTP, runs CMake remotely, and streams output back. Local and
+remote build directories stay separate -- name remote ones with a
+`-remote` suffix so they don't collide.
 
-The walkthrough below uses `pr4/` as the project. Substitute the path for
-your other course projects.
+This walkthrough assumes a CMake project. Makefile-only projects don't
+integrate cleanly -- convert to CMake first.
 
 ## Add a remote toolchain
 
 **CLion > Settings > Build, Execution, Deployment > Toolchains**
 
 1. Click **+** and pick **Remote Host**.
-2. Name it something memorable, e.g. `gios-env (test VM)`.
-3. Next to **Credentials**, click the gear icon > **+** to create a new SSH
-   configuration:
-   - **Host**: the VM's public IP (printed by `deploy.sh`, e.g. `20.62.97.41`)
-   - **Port**: `2222`
+2. Name it something memorable, e.g. `dev VM`.
+3. Next to **Credentials**, click the gear icon and pick **+** to create
+   a new SSH configuration:
+   - **Host**: `<fqdn>`
+   - **Port**: your container's host port (the `<port>:22` in
+     `containers/docker-compose.yml`)
    - **Username**: `root`
    - **Authentication type**: `Key pair`
-   - **Private key file**: `~/.ssh/id_ed25519` (or whichever key you
-     deployed with)
-   - Click **Test Connection** — should succeed in under a second.
-4. Back in the toolchain dialog, the lower fields auto-detect once the SSH
-   connection is up:
-   - **CMake**: `/usr/bin/cmake` (3.22.x)
+   - **Private key file**: the key you deployed with (`~/.ssh/id_ed25519`
+     by default)
+
+   Click **Test Connection**.
+4. Back in the toolchain dialog, the lower fields auto-detect once the
+   SSH connection is up:
+   - **CMake**: `/usr/bin/cmake`
    - **Build Tool**: `/usr/bin/make`
    - **C Compiler / C++ Compiler**: `/usr/bin/gcc`, `/usr/bin/g++`
    - **Debugger**: `/usr/bin/gdb`
 
-   If any field shows "Detect failed", double-check the SSH connection
-   first — almost always a key or host issue, not a missing tool.
+   If any shows "Detect failed", check the SSH connection first.
 5. Click **Apply**.
 
 ## Add a CMake profile
@@ -41,68 +42,52 @@ your other course projects.
 1. Click **+** to add a new profile.
 2. **Name**: `Debug-remote` (or whatever you like).
 3. **Build type**: `Debug`.
-4. **Toolchain**: select the `gios-env (test VM)` toolchain you just made.
-5. **Generator**: leave at default (`Let CMake decide`).
-6. Leave **CMake options** empty unless you have a reason — the project's
-   `CMakeLists.txt` already sets the flags.
-7. **Build directory**: `cmake-build-debug-remote` (anything ending in
-   `-remote` so it doesn't collide with local builds).
+4. **Toolchain**: the `dev VM` toolchain you just made.
+5. **Generator**: default (`Let CMake decide`).
+6. **CMake options**: empty -- the project's `CMakeLists.txt` already
+   sets what's needed.
+7. **Build directory**: `cmake-build-debug-remote`. Anything ending in
+   `-remote` works; the suffix keeps remote builds from colliding with
+   local ones.
 8. Click **OK**.
 
-CLion will start the first remote sync immediately. Watch the status bar —
-it'll say "Uploading…" then "CMake project reload…". On a fresh VM the
-first sync uploads the whole project tree (a minute or two for `pr4/`,
-mostly the proto-generated files). Subsequent syncs are incremental.
+CLion starts the first remote sync immediately; the status bar shows
+progress. Subsequent syncs are incremental.
 
 ## Open the project and select the profile
 
 1. **File > Open** and pick the project root.
-2. Trust the project when prompted.
-3. Wait for CLion to detect the CMake project and finish the first reload.
-4. In the top toolbar, the CMake profile dropdown should show
-   `Debug-remote`. If it shows a different profile, switch to the remote
-   one.
+2. Trust the project when prompted, then wait for the first CMake
+   reload to finish.
+3. In the top toolbar, the CMake profile dropdown should show
+   `Debug-remote`. Switch to it if it shows a different profile.
 
-## Build
+## Build the project
 
-**Build > Build Project** (or `⌘F9` on macOS).
+**Build > Build Project** (or `Cmd-F9` on macOS).
 
-The build runs on the VM, not locally. Output binaries land in
-`pr4/bin/` on the remote side; CLion syncs them back automatically. First
-build takes a couple minutes (gRPC and protobuf compilation).
-
-If the build fails with a CMake error about missing `protoc` or
-`grpc_cpp_plugin`, the toolchain isn't pointing at the container —
-it's most likely connected to the host (port 22) instead of the container
-(port 2222). Check the SSH configuration's port.
+The build runs on the VM, not locally; CLion syncs artifacts back to
+your laptop automatically. First build takes a couple minutes.
 
 ## Run and debug
 
-The pr4 project produces four binaries:
-`dfs-server-p1`, `dfs-client-p1`, `dfs-server-p2`, `dfs-client-p2`.
-
 1. Top-toolbar **Run/Debug Configurations** dropdown > **Edit
    Configurations**.
-2. Each binary should already have an auto-generated configuration. If
-   not, click **+** > **CMake Application** and pick the target.
-3. Set **Program arguments** as needed (e.g. `--mount /tmp/server-mount`
-   for the server).
-4. **Working directory**: leave at the default (`$ProjectFileDir$`) — the
-   remote toolchain remaps it correctly.
-5. Run server first (typically), then client.
+2. Each CMake target gets an auto-generated configuration.
+3. **Program arguments**: as needed.
+4. **Working directory**: default (`$ProjectFileDir$`); the remote
+   toolchain remaps it correctly.
 
-Debugging works the same way — set breakpoints in CLion as usual; gdb runs
-on the VM under the hood and CLion drives it locally. No extra setup
-needed for breakpoints, watches, or stepping.
+Debugging works as usual: set breakpoints in CLion; gdb runs on the VM
+and CLion drives it. No extra setup for breakpoints, watches, or
+stepping.
 
-## When the VM IP changes
+## After a redeploy
 
-The public IP is allocated as `Static`, so it stays constant for as long
-as the VM exists. If you tear down and redeploy, you'll get a new IP. Two
-things to update:
+The FQDN is stable across redeploys, so CLion's toolchain settings
+keep working. The host's SSH key changes, though, so clear the stale
+fingerprint:
 
-1. **CLion**: Settings > Build > Toolchains > your toolchain >
-   Credentials > edit Host. CLion picks up the change without rebuilding
-   anything.
-2. **Local SSH known_hosts**: `ssh-keygen -R '[old-ip]:2222'` and
-   `ssh-keygen -R old-ip` to drop stale fingerprints.
+```bash
+ssh-keygen -R '[<fqdn>]:<port>'
+```
