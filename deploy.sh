@@ -30,7 +30,6 @@ AUTO_SHUTDOWN_TIME="${AUTO_SHUTDOWN_TIME:-1900}"
 AUTO_SHUTDOWN_TIME_ZONE="${AUTO_SHUTDOWN_TIME_ZONE:-UTC}"
 AUTO_SHUTDOWN_EMAIL="${AUTO_SHUTDOWN_EMAIL:-}"
 
-# Must match main.bicep's `adminUsername` var.
 ADMIN_USERNAME="omscs"
 
 # Compose is the source of truth: each "<port>:22" becomes an NSG rule.
@@ -59,6 +58,7 @@ VM_HOST=$(az deployment group create \
         autoShutdownTime="$AUTO_SHUTDOWN_TIME" \
         autoShutdownTimeZone="$AUTO_SHUTDOWN_TIME_ZONE" \
         autoShutdownEmail="$AUTO_SHUTDOWN_EMAIL" \
+        adminUsername="$ADMIN_USERNAME" \
     --query 'properties.outputs.fqdn.value' -o tsv)
 
 echo "==> Syncing containers/ to $VM_HOST..."
