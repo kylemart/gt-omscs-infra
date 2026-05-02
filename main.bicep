@@ -195,7 +195,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
 
 // Custom Script Extension: runs bootstrap.sh on the VM (installs Docker on
 // first run, prepares the authorized_keys symlink). Re-executes only when
-// bootstrap.sh changes — that's what feeds protectedSettings.script.
+// the prepend or bootstrap.sh changes — those feed protectedSettings.script.
 // Container files are NOT in the CSE; deploy.sh ships them via rsync.
 resource containersExtension 'Microsoft.Compute/virtualMachines/extensions@2024-07-01' = {
   parent: vm
@@ -207,7 +207,7 @@ resource containersExtension 'Microsoft.Compute/virtualMachines/extensions@2024-
     typeHandlerVersion: '2.1'
     autoUpgradeMinorVersion: true
     protectedSettings: {
-      script: base64(loadTextContent('bootstrap.sh'))
+      script: base64('ADMIN_USERNAME=${adminUsername}\n${loadTextContent('bootstrap.sh')}')
     }
   }
 }

@@ -8,8 +8,7 @@
 
 set -euo pipefail
 
-# Must match main.bicep's `adminUsername` var.
-ADMIN_USERNAME="omscs"
+: "${ADMIN_USERNAME:?ADMIN_USERNAME must be set}"
 
 # `command -v` guard makes re-runs a no-op once Docker is installed.
 if ! command -v docker >/dev/null 2>&1; then
