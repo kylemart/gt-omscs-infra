@@ -90,7 +90,7 @@ Inline values only apply to keys not uncommented in `.env`.
 | `AUTO_SHUTDOWN_ENABLED` | `true` | Daily auto-shutdown schedule. |
 | `AUTO_SHUTDOWN_TIME` | `1900` | Local time, `HHmm` 24-hour. |
 | `AUTO_SHUTDOWN_TIME_ZONE` | `UTC` | Windows time-zone id. |
-| `DNS_LABEL` | _required_ | DNS label prepended to `<LOCATION>.cloudapp.azure.com` to form the FQDN. |
+| `DNS_LABEL` | _required_ | DNS label prepended to `<LOCATION>.cloudapp.azure.com` to form the FQDN. Append a random suffix so the FQDN isn't guessable; see `.env.example`. |
 | `LOCATION` | `eastus2` | Azure region. |
 | `RG` | `rg-omscs-$LOCATION` | Resource group name. |
 | `SSH_KEY` | `~/.ssh/id_ed25519.pub` | Public key embedded in the VM's `authorized_keys`. |
