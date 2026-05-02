@@ -18,3 +18,12 @@ services:
     restart: unless-stopped
     volumes:
       - /var/lib/dev-vm/authorized_keys:/etc/ssh/authorized_keys:ro
+
+  sat-env:
+    build: ./sat-env
+    container_name: sat-env
+    ports:
+      - "2223:22"
+    restart: unless-stopped
+    volumes:
+      - /var/lib/dev-vm/authorized_keys:/etc/ssh/authorized_keys:ro
