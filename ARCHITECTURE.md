@@ -11,7 +11,6 @@ I already had Azure credits from the OMSCS student program, which made
 the running cost effectively zero for me. Choosing a VM over something
 ephemeral means state persists between sessions, costs stay predictable,
 and there's no per-CPU-minute billing during a long debugging session.
-The same shape would translate to AWS or GCP without much change.
 
 **Why one VM with containers instead of one VM per course?**
 A single VM shares its idle cost across courses, runs on one
