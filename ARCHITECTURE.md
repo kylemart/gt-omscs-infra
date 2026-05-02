@@ -10,12 +10,14 @@ graph LR
 
     subgraph RG["Azure resource group"]
         IP["Public IP + DNS label"]
-        NIC["NIC"]
         NSG["NSG"]
 
-        subgraph VM["VM running Docker"]
-            a["a-env :2222"]
-            b["b-env :2223"]
+        subgraph subnet["Subnet"]
+            subgraph VM["VM running Docker"]
+                NIC["NIC"]
+                a["a-env :2222"]
+                b["b-env :2223"]
+            end
         end
     end
 
@@ -23,7 +25,7 @@ graph LR
     IP --> NIC
     NIC --> a
     NIC --> b
-    NSG -.- NIC
+    NSG -.- subnet
 ```
 
 ## Rationale
