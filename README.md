@@ -12,7 +12,7 @@ idle costs run a few bucks a month.
 
 You need:
 
-- An Azure subscription. Students get $100 in credit at https://azure.microsoft.com/free/students.
+- An Azure subscription. As students we get $100 in credit at https://azure.microsoft.com/free/students.
 - Homebrew. https://brew.sh
 - `az` CLI. `brew install azure-cli`
 - `yq`. `brew install yq`
@@ -80,13 +80,7 @@ $EDITOR .env
 ./deploy.sh
 ```
 
-For one-off runs, set env vars on the command line instead:
-
-```bash
-RG=rg-omscs-test-eastus2 ./deploy.sh
-```
-
-Inline values only apply to keys NOT uncommented in `.env`.
+Inline values only apply to keys not uncommented in `.env`.
 
 | Environment variable | Default value | Purpose |
 |---|---|---|
