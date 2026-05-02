@@ -30,12 +30,29 @@ AUTO_SHUTDOWN_TIME="${AUTO_SHUTDOWN_TIME:-1900}"
 AUTO_SHUTDOWN_TIME_ZONE="${AUTO_SHUTDOWN_TIME_ZONE:-UTC}"
 AUTO_SHUTDOWN_EMAIL="${AUTO_SHUTDOWN_EMAIL:-}"
 
+# Default to every profile tagged in the compose file, so adding a new
+# course doesn't require touching this script or .env.example.
+if [[ -z "${COMPOSE_PROFILES:-}" ]]; then
+    COMPOSE_PROFILES=$(yq -r '[.services[].profiles[]] | unique | join(",")' \
+        "$SCRIPT_DIR/containers/docker-compose.yml")
+fi
+
 ADMIN_USERNAME="omscs"
 
 # Compose is the source of truth: each "<port>:22" becomes an NSG rule.
-CONTAINER_SSH_PORTS=$(yq -o=json -I=0 \
-    '[.services[].ports[] | select(test(":22$")) | sub(":.*", "")]' \
-    "$SCRIPT_DIR/containers/docker-compose.yml")
+# Filter to services whose profile is active so disabled courses don't
+# leave open ports on the NSG. The yq query:
+#   1. Splits COMPOSE_PROFILES into an array bound as $active_profiles.
+#   2. Keeps each service iff any of its profiles is in $active_profiles.
+#   3. Emits the host port from each ":22" mapping.
+CONTAINER_SSH_PORTS=$(COMPOSE_PROFILES="$COMPOSE_PROFILES" yq -o=json -I=0 '
+    (env(COMPOSE_PROFILES) | split(",")) as $active_profiles
+    | [.services[]
+       | select(.profiles // [] | any_c(. as $profile | $active_profiles | contains([$profile])))
+       | .ports[]
+       | select(test(":22$"))
+       | sub(":.*", "")]
+  ' "$SCRIPT_DIR/containers/docker-compose.yml")
 
 SSH_OPTS="-o StrictHostKeyChecking=accept-new"
 
@@ -67,6 +84,6 @@ rsync -az --delete -e "ssh $SSH_OPTS" \
 
 echo "==> Bringing services up..."
 ssh $SSH_OPTS "$ADMIN_USERNAME@$VM_HOST" \
-    'cd ~/containers && docker compose up -d --build --remove-orphans'
+    "cd ~/containers && COMPOSE_PROFILES='$COMPOSE_PROFILES' docker compose up -d --build --remove-orphans"
 
 echo "==> Done. Connect: ssh $ADMIN_USERNAME@$VM_HOST"
