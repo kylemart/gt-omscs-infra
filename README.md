@@ -88,19 +88,19 @@ RG=rg-omscs-test-eastus2 ./deploy.sh
 
 Inline values only apply to keys NOT uncommented in `.env`.
 
-| Env var | Default | Purpose |
+| Environment variable | Default value | Purpose |
 |---|---|---|
-| `RG` | `rg-omscs-$LOCATION` | Resource group name. |
-| `LOCATION` | `eastus2` | Azure region. |
-| `VM_NAME` | `omscs-dev-vm-$LOCATION` | Used to derive NIC, NSG, IP, and disk names. |
-| `VM_SIZE` | `Standard_B2s` | VM SKU. |
-| `DNS_LABEL` | _required_ | DNS label prepended to `<LOCATION>.cloudapp.azure.com` to form the FQDN. |
-| `SSH_KEY` | `~/.ssh/id_ed25519.pub` | Public key embedded in the VM's `authorized_keys`. |
-| `SSH_SOURCE_ADDRESS_PREFIX` | `*` | NSG inbound source. Lock to your IP for security. |
+| `AUTO_SHUTDOWN_EMAIL` | empty | Email for the 30-minute advance notice. Empty = no email. |
 | `AUTO_SHUTDOWN_ENABLED` | `true` | Daily auto-shutdown schedule. |
 | `AUTO_SHUTDOWN_TIME` | `1900` | Local time, `HHmm` 24-hour. |
 | `AUTO_SHUTDOWN_TIME_ZONE` | `UTC` | Windows time-zone id. |
-| `AUTO_SHUTDOWN_EMAIL` | empty | Email for the 30-minute advance notice. Empty = no email. |
+| `DNS_LABEL` | _required_ | DNS label prepended to `<LOCATION>.cloudapp.azure.com` to form the FQDN. |
+| `LOCATION` | `eastus2` | Azure region. |
+| `RG` | `rg-omscs-$LOCATION` | Resource group name. |
+| `SSH_KEY` | `~/.ssh/id_ed25519.pub` | Public key embedded in the VM's `authorized_keys`. |
+| `SSH_SOURCE_ADDRESS_PREFIX` | `*` | NSG inbound source. Lock to your IP for security. |
+| `VM_NAME` | `omscs-dev-vm-$LOCATION` | Used to derive NIC, NSG, IP, and disk names. |
+| `VM_SIZE` | `Standard_B2s` | VM SKU. |
 
 ## Tear down
 
