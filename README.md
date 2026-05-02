@@ -91,5 +91,6 @@ az group delete --name rg-omscs-eastus2 --yes --no-wait
 
 ## See also
 
+- [ARCHITECTURE.md](ARCHITECTURE.md) -- why the setup is shaped this way and what a deploy actually does.
 - [containers/README.md](containers/README.md) -- adding, removing, and iterating on course containers.
 - [CLION.md](CLION.md) -- CLion remote toolchain setup.
