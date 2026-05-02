@@ -12,16 +12,20 @@ graph LR
         IP["Public IP + DNS label"]
         NSG["NSG"]
 
-        subgraph VM["VM running Docker"]
-            a["a-env :2222"]
-            b["b-env :2223"]
+        subgraph subnet["Subnet"]
+            subgraph VM["VM running Docker"]
+                NIC["NIC"]
+                a["a-env :2222"]
+                b["b-env :2223"]
+            end
         end
     end
 
     CLion -.->|SSH| IP
-    IP --> NSG
-    NSG --> a
-    NSG --> b
+    IP --> NIC
+    NIC --> a
+    NIC --> b
+    NSG -.- subnet
 ```
 
 ## Rationale
