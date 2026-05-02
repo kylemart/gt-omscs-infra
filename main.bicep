@@ -46,13 +46,15 @@ param autoShutdownTimeZone string
 @description('Email to notify 30 min before auto-shutdown. Empty disables notifications.')
 param autoShutdownEmail string
 
+@description('Linux admin username for the VM.')
+param adminUsername string
+
 var nicName = '${vmName}-nic'
 var pipName = '${vmName}-pip'
 var vnetName = '${vmName}-vnet'
 var nsgName = '${vmName}-nsg'
 var subnetName = 'default'
 var osDiskName = '${vmName}-osdisk'
-var adminUsername = 'omscs'
 
 resource pip 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
   name: pipName
