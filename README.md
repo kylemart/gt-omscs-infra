@@ -40,6 +40,16 @@ git clone git@github.com:kylemart/gt-omscs-infra.git
 cd gt-omscs-infra
 ```
 
+## Configure
+
+Copy `.env.example` to `.env` and set `DNS_LABEL` (required). Uncomment
+any other values you want to change; descriptions are in the file.
+
+```bash
+cp .env.example .env
+$EDITOR .env
+```
+
 ## Deploy
 
 ```bash
@@ -49,9 +59,6 @@ cd gt-omscs-infra
 First run takes about 5 minutes (Docker install on the VM, then the
 initial image build). Later runs are closer to 30 seconds and only redo
 what changed.
-
-By default this creates a `Standard_B2s` VM in `rg-omscs-eastus2`
-(region `eastus2`). See [Overrides](#overrides) to change any of that.
 
 When the script returns, it prints the FQDN. Confirm what's running:
 
@@ -70,33 +77,6 @@ takes over from there: source sync, builds, debug.
 [CLION.md](CLION.md) walks through the setup.
 
 ---
-
-## Overrides
-
-Defaults live in `deploy.sh`. To change them, copy `.env.example` to
-`.env` and uncomment the values you want:
-
-```bash
-cp .env.example .env
-$EDITOR .env
-./deploy.sh
-```
-
-Inline values only apply to keys not uncommented in `.env`.
-
-| Environment variable | Default value | Purpose |
-|---|---|---|
-| `AUTO_SHUTDOWN_EMAIL` | empty | Email for the 30-minute advance notice. Empty = no email. |
-| `AUTO_SHUTDOWN_ENABLED` | `true` | Daily auto-shutdown schedule. |
-| `AUTO_SHUTDOWN_TIME` | `1900` | Local time, `HHmm` 24-hour. |
-| `AUTO_SHUTDOWN_TIME_ZONE` | `UTC` | Windows time-zone id. |
-| `DNS_LABEL` | _required_ | DNS label prepended to `<LOCATION>.cloudapp.azure.com` to form the FQDN. Append a random suffix so the FQDN isn't guessable; see `.env.example`. |
-| `LOCATION` | `eastus2` | Azure region. |
-| `RG` | `rg-omscs-$LOCATION` | Resource group name. |
-| `SSH_KEY` | `~/.ssh/id_ed25519.pub` | Public key embedded in the VM's `authorized_keys`. |
-| `SSH_SOURCE_ADDRESS_PREFIX` | `*` | NSG inbound source. Lock to your IP for security. |
-| `VM_NAME` | `omscs-dev-vm-$LOCATION` | Used to derive NIC, NSG, IP, and disk names. |
-| `VM_SIZE` | `Standard_B2s` | VM SKU. |
 
 ## Tear down
 
