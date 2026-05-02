@@ -1,9 +1,11 @@
 # OMSCS Dev VM on Azure
 
-I'm on an M-series Mac, and my course's x86 Docker image runs under
-emulation -- slow when it works, broken when it doesn't. So I built
-this: a small Azure VM that runs the container and lets CLion drive
-it over SSH like a local toolchain. Real x86, no emulation.
+I built this while taking GIOS -- the course ships an x86 Docker image,
+and running it under emulation on my M-series Mac was slow when it
+worked and broken when it didn't. The fix: a small Azure VM that runs
+the container and lets CLion drive it over SSH like a local toolchain.
+I plan to reuse it for future OMSCS courses, and figured sharing the
+setup might help others.
 
 Setup takes about 10 minutes. The VM auto-shuts down each night, so
 idle costs run a few bucks a month.
