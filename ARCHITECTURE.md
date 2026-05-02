@@ -23,7 +23,7 @@ graph LR
     IP --> NIC
     NIC --> a
     NIC --> b
-    NSG -. filters .- NIC
+    NSG -.- NIC
 ```
 
 ## Rationale
