@@ -80,11 +80,13 @@ takes over from there: source sync, builds, debug.
 
 ## Tear down
 
+When you're done with the VM and want to wipe everything, delete the
+resource group. That removes the VM, disk, networking, and the group
+itself.
+
 ```bash
 az group delete --name rg-omscs-eastus2 --yes --no-wait
 ```
-
-Wipes the resource group and everything in it.
 
 ## See also
 
