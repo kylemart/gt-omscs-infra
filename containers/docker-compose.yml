@@ -2,8 +2,12 @@
 # typically one per OMSCS course. Add a new course = add a new service block
 # below, then re-run ./deploy.sh.
 #
-# This file is the source of truth for host SSH ports — adding a service
-# here also opens its port in the NSG.
+# Each service is tagged with a Compose profile (gios, sat, ...). Only services
+# whose profile is in COMPOSE_PROFILES start; unlisted profiles stay dormant.
+# Default in deploy.sh runs all of them.
+#
+# This file is the source of truth for host SSH ports. Adding a service here
+# also opens its port in the NSG (filtered to active profiles).
 #
 # /var/lib/dev-vm/authorized_keys is a symlink that the CSE bootstrap creates
 # on the VM, pointing at the admin user's authorized_keys. Using a fixed
@@ -13,6 +17,7 @@ services:
   gios-env:
     build: ./gios-env
     container_name: gios-env
+    profiles: [gios]
     ports:
       - "2222:22"
     restart: unless-stopped
@@ -22,6 +27,7 @@ services:
   sat-env:
     build: ./sat-env
     container_name: sat-env
+    profiles: [sat]
     ports:
       - "2223:22"
     restart: unless-stopped

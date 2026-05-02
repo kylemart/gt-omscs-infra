@@ -10,7 +10,9 @@ Create `<service>/` with a `Dockerfile` for the course environment.
 `gios-env/Dockerfile` is a reasonable starting point.
 
 Add a matching service block to `docker-compose.yml`, picking an unused
-host port for the `<port>:22` mapping.
+host port for the `<port>:22` mapping. Tag the service with a Compose
+profile (`profiles: [<course>]`) and add `<course>` to the default
+`COMPOSE_PROFILES` value in `.env.example`.
 
 Run `./deploy.sh` from the repo root. The new port opens in the NSG and
 the container is built and started on the VM. Existing containers keep
