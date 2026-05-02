@@ -6,6 +6,7 @@
 set -euo pipefail
 
 require() { command -v "$1" >/dev/null || { echo "error: $1 not installed ($2)" >&2; exit 1; }; }
+require brew  "see https://brew.sh"
 require az    "brew install azure-cli"
 require yq    "brew install yq"
 require rsync "brew install rsync"

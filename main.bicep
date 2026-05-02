@@ -169,7 +169,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
     }
     osProfile: {
       computerName: vmName
-      #disable-next-line adminusername-should-not-be-literal
       adminUsername: adminUsername
       linuxConfiguration: {
         disablePasswordAuthentication: true
