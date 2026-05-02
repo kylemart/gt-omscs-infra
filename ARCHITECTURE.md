@@ -10,6 +10,7 @@ graph LR
 
     subgraph RG["Azure resource group"]
         IP["Public IP + DNS label"]
+        NIC["NIC"]
         NSG["NSG"]
 
         subgraph VM["VM running Docker"]
@@ -19,9 +20,10 @@ graph LR
     end
 
     CLion -.->|SSH| IP
-    IP --> NSG
-    NSG --> a
-    NSG --> b
+    IP --> NIC
+    NIC --> a
+    NIC --> b
+    NSG -. filters .-> NIC
 ```
 
 ## Rationale
