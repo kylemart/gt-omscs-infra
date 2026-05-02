@@ -4,6 +4,26 @@
 One Azure VM runs Docker, with a separate container for each OMSCS
 course. CLion connects over SSH to the container's exposed port.
 
+```mermaid
+graph LR
+    CLion["CLion (local Mac)"]
+
+    subgraph RG["Azure resource group"]
+        IP["Public IP + DNS label"]
+        NSG["NSG"]
+
+        subgraph VM["VM running Docker"]
+            a["a-env :2222"]
+            b["b-env :2223"]
+        end
+    end
+
+    CLion -.->|SSH| IP
+    IP --> NSG
+    NSG --> a
+    NSG --> b
+```
+
 ## Rationale
 
 **Why an Azure VM rather than Codespaces or a serverless option?**
