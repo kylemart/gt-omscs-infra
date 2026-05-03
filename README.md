@@ -14,10 +14,10 @@ development.
 
 ## Links
 
-- [Deployment](DEPLOY.md) (start here)
-- [CLion setup](CLION.md)
-- [Manage containers](containers/README.md)
-- [Architecture](ARCHITECTURE.md)
+- [Deployment](docs/DEPLOY.md) (start here)
+- [CLion setup](docs/CLION.md)
+- [Manage containers](docs/CONTAINERS.md)
+- [Architecture](docs/ARCHITECTURE.md)
 
 ## Quickstart
 
@@ -28,4 +28,4 @@ cp .env.example .env  # set DNS_LABEL, then save
 ssh omscs@<fqdn> 'cd containers && docker compose ps'
 ```
 
-Full deployment instructions [here](DEPLOY.md).
+Full deployment instructions [here](docs/DEPLOY.md).
