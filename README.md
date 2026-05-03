@@ -1,6 +1,6 @@
 # OMSCS Dev VM on Azure
 
-I built this while taking GIOS -- the course ships an x86 Docker image,
+I built this while taking GIOS -- the course ships an x64 Docker image,
 and running it under emulation on my M-series Mac was sluggish and
 unreliable. So I moved my environment to a small Azure VM: it runs
 the container and lets CLion drive it over SSH, so the experience
