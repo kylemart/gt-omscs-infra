@@ -31,10 +31,10 @@ graph LR
 ## Rationale
 
 **Why an Azure VM rather than Codespaces or a serverless option?**
-I already had Azure credits from the OMSCS student program, which made
-the running cost effectively zero for me. Choosing a VM over something
-ephemeral means state persists between sessions, costs stay predictable,
-and there's no per-CPU-minute billing during a long debugging session.
+I already had Azure credits, so using Azure was a no brainer. Plus, 
+choosing a VM over something ephemeral means state persists between 
+sessions, costs stay predictable, and there's no per-CPU-minute billing 
+during a long debugging session.
 
 **Why one VM with containers instead of one VM per course?**
 A single VM shares its idle cost across courses, runs on one
