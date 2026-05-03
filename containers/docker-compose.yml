@@ -1,10 +1,9 @@
-# Services running on the dev VM. Each service maps to one container,
-# typically one per OMSCS course. Add a new course = add a new service block
-# below, then re-run ./deploy.sh.
+# One service per course environment on the dev VM. Add a new environment =
+# add a new service block below, then re-run ./deploy.sh.
 #
 # Each service is tagged with a Compose profile (gios, sat, ...). Only services
 # whose profile is in COMPOSE_PROFILES start; unlisted profiles stay dormant.
-# Default in deploy.sh runs all of them.
+# See docs/ENVIRONMENTS.md for the available profiles.
 #
 # This file is the source of truth for host SSH ports. Adding a service here
 # also opens its port in the NSG (filtered to active profiles).

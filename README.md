@@ -16,7 +16,7 @@ development.
 
 - [Deployment](docs/DEPLOY.md) (start here)
 - [CLion setup](docs/CLION.md)
-- [Manage containers](docs/CONTAINERS.md)
+- [Manage environments](docs/ENVIRONMENTS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 
 ## Quickstart
