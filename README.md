@@ -1,14 +1,14 @@
-# OMSCS Dev VM on Azure
+# OMSCS Infrastructure
 
-I built this while taking GIOS -- the course ships an x64 Docker image,
-and running it under emulation on my M-series Mac was sluggish and
-unreliable. So I moved my environment to a small Azure VM: it runs
-the container and lets CLion drive it over SSH, so the experience
-feels native. I plan to keep building on this for future OMSCS
-courses -- pull requests welcome.
+I use an M-series Mac. I love it. It loves me. We're a happy family. ❤️
 
-Setup takes about 10 minutes. The VM auto-shuts down each night, so
-idle costs run a few bucks a month.
+But... many OMSCS courses only support students with x64-based machines. While emulation 
+(via Docker and Rosetta) has been enough to get through most course assignments, taking 
+GIOS finally pushed me towards setting up a proper toolchain for native x64 development. 
+This repository contains instructions on how to acheive the same setup I did. It's quick,
+easy and for most students completely free! By the end you'll have a remote VM with 
+containerized environments you can hook up with IDEs like CLion for native-feeling project 
+development. 
 
 ## Before you start
 
