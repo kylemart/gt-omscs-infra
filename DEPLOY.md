@@ -1,4 +1,4 @@
-# Installation
+# Deployment
 
 ## Before you start
 
