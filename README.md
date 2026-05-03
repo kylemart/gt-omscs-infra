@@ -14,7 +14,7 @@ development.
 
 ## Links
 
-- [Deployment](DEPLOY.md)
+- [Deployment](DEPLOY.md) (start here)
 - [CLion setup](CLION.md)
 - [Manage containers](containers/README.md)
 - [Architecture](ARCHITECTURE.md)
