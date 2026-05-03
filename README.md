@@ -14,10 +14,10 @@ development.
 
 ## Links
 
-- [Installation](INSTALL.md) - prerequisites, Azure login, deploy, tear down.
-- [Architecture](ARCHITECTURE.md) - why the setup is built this way and what a deploy actually does.
-- [CLion setup](CLION.md) - hooking CLion's remote toolchain to a course container.
-- [Containers](containers/README.md) - adding, removing, and iterating on course containers.
+- [Deployment](DEPLOY.md)
+- [CLion setup](CLION.md)
+- [Manage containers](containers/README.md)
+- [Architecture](ARCHITECTURE.md)
 
 ## Quickstart
 
@@ -28,4 +28,4 @@ cp .env.example .env  # set DNS_LABEL, then save
 ssh omscs@<fqdn> 'cd containers && docker compose ps'
 ```
 
-Full walkthrough in [INSTALL.md](INSTALL.md).
+Full walkthrough [here](DEPLOY.md).
