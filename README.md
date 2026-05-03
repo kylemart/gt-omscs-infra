@@ -2,7 +2,9 @@
 
 I use an M-series Mac. I love it. It loves me. We're a happy family. ❤️
 
-But... many OMSCS courses only support students with x64-based machines. While emulation 
+But... many OMSCS courses only support students with x64-based machines. 💔
+
+While emulation 
 (via Docker and Rosetta) has been enough to get through most course assignments, taking 
 GIOS finally pushed me towards setting up a proper toolchain for native x64 development. 
 This repository contains instructions on how to acheive the same setup I did. It's quick,
