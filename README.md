@@ -28,4 +28,4 @@ cp .env.example .env  # set DNS_LABEL, then save
 ssh omscs@<fqdn> 'cd containers && docker compose ps'
 ```
 
-Full walkthrough [here](DEPLOY.md).
+Full deployment instructions [here](DEPLOY.md).
