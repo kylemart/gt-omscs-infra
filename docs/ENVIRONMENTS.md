@@ -43,7 +43,7 @@ away, and the container is stopped and removed.
 The image stays cached on the VM. `docker image prune` reclaims the
 disk.
 
-## Iterating on an environment
+## Modifying an environment
 
 Edit files in `containers/<service>/` locally, then re-run `./deploy.sh`.
 Only changed bytes ship and only the affected service rebuilds.
