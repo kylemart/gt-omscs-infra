@@ -8,9 +8,10 @@ While emulation
 (via Docker and Rosetta) has been enough to get through most course assignments, taking 
 GIOS finally pushed me towards setting up a proper toolchain for native x64 development. 
 This repository contains instructions on how to acheive the same setup I did. It's quick,
-easy and for most students completely free! By the end you'll have a remote VM with 
-containerized environments you can hook up to IDEs like CLion for native-feeling project 
-development. 
+easy and for most students completely free! 
+
+By the end you'll have a remote VM with containerized environments you can hook up to IDEs 
+like CLion for native-feeling project development. 
 
 ## Links
 
